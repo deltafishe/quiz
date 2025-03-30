@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz de Inglês - Gonçalo Picado</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+    }
+    #quiz-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      padding: 20px;
+    }
+    .question {
+      display: none;
+      animation: fadeIn 0.5s;
+    }
+    .active {
+      display: block;
+    }
+    .option {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      background: #e7e7e7;
+      border: none;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    .option:hover {
+      background: #d5d5d5;
+    }
+    .correct {
+      background: #a0e7a0;
+    }
+    .wrong {
+      background: #f7a8a8;
+    }
+    #next-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      display: none;
+      cursor: pointer;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    #flag {
+      width: 150px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <img id="flag" src="https://upload.wikimedia.org/wikipedia/commons/4/45/Flag_of_Ireland.svg" alt="Bandeira da Irlanda">
+  <div id="quiz-container">
+    <h2>Quiz de Inglês</h2>
+    <div id="question-container">
+      <!-- As perguntas serão injetadas aqui -->
+    </div>
+    <button id="next-btn">Próxima Pergunta</button>
+  </div>
+
+  <script>
+    // Array com os dados das perguntas
+    const questions = [
+      {
+        text: 'Which Irish band is famous for hits like "With or Without You" and "Where the Streets Have No Name"?',
+        options: ['The Cranberries', 'U2', 'The Dubliners'],
+        correct: 1  // índice 1: U2
+      },
+      {
+        text: 'What is celebrated on March 17th?',
+        options: ['Halloween', 'St Patrick’s Day', 'Christmas'],
+        correct: 1  // índice 1: St Patrick’s Day
+      },
+      {
+        text: 'Which traditional Irish instrument is most commonly associated with Irish folk music?',
+        options: ['Violin', 'Flute', 'Tin whistle'],
+        correct: 0  // índice 0: Violin
+      },
+      {
+        text: 'What is the biggest traditional Irish music festival?',
+        options: ['Fleadh Cheoil', 'Glastonbury', 'Rock in Rio'],
+        correct: 0  // índice 0: Fleadh Cheoil
+      },
+      {
+        text: 'What is the traditional percussion instrument used in Irish music?',
+        options: ['Drums', 'Piano', 'Bodhrán'],
+        correct: 2  // índice 2: Bodhrán
+      },
+      {
+        text: 'What is the official symbol of Ireland?',
+        options: ['Harp', 'Guitar', 'Harmonic'],
+        correct: 0  // índice 0: Harp
+      },
+      {
+        text: 'What color do the Irish wear on St. Patrick\'s Day?',
+        options: ['Blue', 'Green', 'Yellow'],
+        correct: 1  // índice 1: Green
+      }
+    ];
+
+    let currentQuestion = 0;
+
+    // Função para carregar a pergunta atual
+    function loadQuestion() {
+      const container = document.getElementById('question-container');
+      container.innerHTML = ''; // Limpa a div
+      document.getElementById('next-btn').style.display = 'none';
+
+      // Verifica se já acabaram as perguntas
+      if (currentQuestion >= questions.length) {
+        container.innerHTML = '<h3>Thank you for participating in the quiz!</h3>';
+        return;
+      }
+
+      const q = questions[currentQuestion];
+
+      // Cria o elemento da pergunta
+      const questionEl = document.createElement('div');
+      questionEl.className = 'question active';
+      questionEl.innerHTML = `<h3>${q.text}</h3>`;
+      container.appendChild(questionEl);
+
+      // Cria os botões de opção
+      q.options.forEach((option, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'option';
+        btn.textContent = option;
+        btn.onclick = function() {
+          // Se a opção selecionada for correta
+          if (index === q.correct) {
+            btn.classList.add('correct');
+            disableAllOptions();
+            document.getElementById('next-btn').style.display = 'inline-block';
+          } else {
+            // Se estiver errada, destaca em vermelho e desabilita apenas esse botão
+            btn.classList.add('wrong');
+            btn.disabled = true;
+          }
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    // Função para desabilitar todos os botões de opção
+    function disableAllOptions() {
+      const buttons = document.querySelectorAll('.option');
+      buttons.forEach(b => b.disabled = true);
+    }
+
+    // Evento do botão de próxima pergunta
+    document.getElementById('next-btn').addEventListener('click', function() {
+      currentQuestion++;
+      loadQuestion();
+    });
+
+    // Inicia o quiz
+    loadQuestion();
+  </script>
+</body>
+</html>
+
